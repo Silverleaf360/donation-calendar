@@ -14,22 +14,63 @@
     <h2>Pick a Donation Box</h2>
     <div class="grid" id="donationGrid"></div>
     
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+        // 🔹 Replace with your Firebase config
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_ID",
+            appId: "YOUR_APP_ID"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         const grid = document.getElementById("donationGrid");
 
-        for (let i = 1; i <= 60; i++) {
-            const box = document.createElement("div");
-            box.className = "box";
-            box.innerText = i;
-            box.onclick = () => {
-                const confirmDonate = confirm(`Donate $${i}?`);
-                if (confirmDonate) {
-                    box.classList.add("taken");
-                    window.open(`https://paypal.me/will3stuart/${i}`, "_blank"); // Replace with your PayPal link
+        async function loadGrid() {
+            for (let i = 1; i <= 100; i++) {
+                const box = document.createElement("div");
+                box.className = "box";
+                box.innerText = i;
+                
+                // Check if this box is already paid for
+                const docRef = doc(db, "donations", String(i));
+                const docSnap = await getDoc(docRef);
+                
+                if (docSnap.exists()) {
+                    box.classList.add("taken"); // Mark as taken
                 }
-            };
-            grid.appendChild(box);
+
+                // Clicking the box redirects to PayPal/Venmo
+                box.onclick = async () => {
+                    if (box.classList.contains("taken")) {
+                        alert("This box is already taken!");
+                        return;
+                    }
+                    
+                    const confirmDonate = confirm(`Donate $${i}?`);
+                    if (confirmDonate) {
+                        window.open(`https://paypal.me/YOURUSERNAME/${i}`, "_blank"); // Replace with actual PayPal link
+                        
+                        // After payment, mark it as paid (this can be done manually)
+                        const confirmPaid = confirm("Mark this box as paid?");
+                        if (confirmPaid) {
+                            await setDoc(docRef, { paid: true });
+                            box.classList.add("taken");
+                        }
+                    }
+                };
+                
+                grid.appendChild(box);
+            }
         }
+
+        loadGrid();
     </script>
 </body>
 </html>
