@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donation Grid</title>
+    <title>Donation Grid (Venmo)</title>
     <style>
         .grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; }
         .box { width: 50px; height: 50px; text-align: center; line-height: 50px; border: 1px solid black; cursor: pointer; }
@@ -47,7 +47,7 @@
                     box.classList.add("taken"); // Mark as taken
                 }
 
-                // Clicking the box redirects to PayPal/Venmo
+                // Clicking the box redirects to Venmo
                 box.onclick = async () => {
                     if (box.classList.contains("taken")) {
                         alert("This box is already taken!");
@@ -56,9 +56,11 @@
                     
                     const confirmDonate = confirm(`Donate $${i}?`);
                     if (confirmDonate) {
-                        window.open(`https://paypal.me/YOURUSERNAME/${i}`, "_blank"); // Replace with actual PayPal link
-                        
-                        // After payment, mark it as paid (this can be done manually)
+                        // 🔹 Replace "yourvenmousername" with your actual Venmo username
+                        const venmoLink = `https://venmo.com/will3stuart?txn=pay&amount=${i}&note=Donation+Box+${i}`;
+                        window.open(venmoLink, "_blank"); // Opens Venmo payment page
+
+                        // After payment, mark it as paid (manual confirmation)
                         const confirmPaid = confirm("Mark this box as paid?");
                         if (confirmPaid) {
                             await setDoc(docRef, { paid: true });
@@ -73,5 +75,8 @@
 
         loadGrid();
     </script>
+</body>
+</html>
+
 </body>
 </html>
