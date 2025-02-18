@@ -17,7 +17,7 @@
     <script>
         const grid = document.getElementById("donationGrid");
 
-        for (let i = 1; i <= 100; i++) {
+        for (let i = 1; i <= 60; i++) {
             const box = document.createElement("div");
             box.className = "box";
             box.innerText = i;
@@ -25,7 +25,7 @@
                 const confirmDonate = confirm(`Donate $${i}?`);
                 if (confirmDonate) {
                     box.classList.add("taken");
-                    window.open(`https://paypal.me/YOURUSERNAME/${i}`, "_blank"); // Replace with your PayPal link
+                    window.open(`https://paypal.me/will3stuart/${i}`, "_blank"); // Replace with your PayPal link
                 }
             };
             grid.appendChild(box);
