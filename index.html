@@ -18,14 +18,15 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-        // 🔹 Replace with your Firebase config
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT.appspot.com",
-            messagingSenderId: "YOUR_MESSAGING_ID",
-            appId: "YOUR_APP_ID"
+          apiKey: "AIzaSyDupIsmQag53bZzxKzjcVDgRRzFbdnL2fs",
+          authDomain: "donation-calendar-6dac3.firebaseapp.com",
+          projectId: "donation-calendar-6dac3",
+          storageBucket: "donation-calendar-6dac3.firebasestorage.app",
+          messagingSenderId: "342495556535",
+          appId: "1:342495556535:web:6dd427e731c5a6dcb0ee32",
+          measurementId: "G-8B8M0B07WL"
         };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -33,7 +34,7 @@
         const grid = document.getElementById("donationGrid");
 
         async function loadGrid() {
-            for (let i = 1; i <= 100; i++) {
+            for (let i = 1; i <= 60; i++) {
                 const box = document.createElement("div");
                 box.className = "box";
                 box.innerText = i;
