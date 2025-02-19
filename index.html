@@ -3,17 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donation Grid (Venmo)</title>
+    <title>Donation Grid</title>
     <style>
-        .grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; }
-        .box { width: 50px; height: 50px; text-align: center; line-height: 50px; border: 1px solid black; cursor: pointer; }
-        .taken { background-color: gray; cursor: not-allowed; }
+        /* General Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff; /* Light background */
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+            padding-top: 20px;
+        }
+
+        /* Grid Container */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr); /* 10 boxes per row */
+            gap: 10px;
+            max-width: 600px;
+            margin: 20px auto;
+            padding-top: 20px;
+        }
+
+        /* Individual Box */
+        .box {
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            line-height: 60px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #4CAF50; /* Green background */
+            color: white;
+            border: 2px solid #7A9BAE; /* Grayish blue outline */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        /* Box Hover Effect */
+        .box:hover {
+            background-color: #45a049; /* Darker green on hover */
+            transform: scale(1.1); /* Slight zoom effect */
+        }
+
+        /* Box when clicked (taken) */
+        .taken {
+            background-color: #d3d3d3; /* Gray background */
+            cursor: not-allowed;
+            text-decoration: line-through; /* Cross out text */
+            box-shadow: none; /* Remove shadow when taken */
+        }
+
+        /* Crossed-out animation */
+        @keyframes crossOut {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.5; }
+        }
+
+        .crossed {
+            animation: crossOut 0.3s ease forwards; /* Animation for crossed out effect */
+        }
+
+        /* Box when successfully chosen (paid for) */
+        .chosen {
+            background-color: #ff5733; /* Red for taken */
+            color: white;
+        }
+
+        /* Fade-in Effect for Boxes */
+        .box {
+            opacity: 0;
+            animation: fadeIn 0.6s forwards;
+        }
+
+        /* Animation to fade in boxes */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
     </style>
 </head>
 <body>
-    <h2>Pick a Donation Box</h2>
+    <h2>Pick Your Donation Box</h2>
     <div class="grid" id="donationGrid"></div>
-    
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
@@ -34,20 +114,20 @@
         const grid = document.getElementById("donationGrid");
 
         async function loadGrid() {
-            for (let i = 1; i <= 60; i++) {
+            for (let i = 1; i <= 100; i++) {
                 const box = document.createElement("div");
                 box.className = "box";
                 box.innerText = i;
-                
-                // Check if this box is already paid for
+
+                // Check if this box is already taken
                 const docRef = doc(db, "donations", String(i));
                 const docSnap = await getDoc(docRef);
-                
+
                 if (docSnap.exists()) {
                     box.classList.add("taken"); // Mark as taken
                 }
 
-                // Clicking the box redirects to Venmo
+                // Clicking the box will open the Venmo link
                 box.onclick = async () => {
                     if (box.classList.contains("taken")) {
                         alert("This box is already taken!");
@@ -56,27 +136,25 @@
                     
                     const confirmDonate = confirm(`Donate $${i}?`);
                     if (confirmDonate) {
-                        // 🔹 Replace "yourvenmousername" with your actual Venmo username
+                        // Venmo link (replace with your username)
                         const venmoLink = `https://venmo.com/will3stuart?txn=pay&amount=${i}&note=Donation+Box+${i}`;
-                        window.open(venmoLink, "_blank"); // Opens Venmo payment page
+                        window.open(venmoLink, "_blank");
 
-                        // After payment, mark it as paid (manual confirmation)
+                        // After donation, confirm and mark box as paid
                         const confirmPaid = confirm("Mark this box as paid?");
                         if (confirmPaid) {
                             await setDoc(docRef, { paid: true });
-                            box.classList.add("taken");
+                            box.classList.add("chosen");
+                            box.classList.add("crossed");  // Apply crossed-out effect
                         }
                     }
                 };
-                
+
                 grid.appendChild(box);
             }
         }
 
         loadGrid();
     </script>
-</body>
-</html>
-
 </body>
 </html>
