@@ -80,7 +80,7 @@
         /* Fade-in Effect for Boxes */
         .box {
             opacity: 0;
-            animation: fadeIn 0.4s forwards;
+            animation: fadeIn 0.1s forwards;
         }
 
         /* Animation to fade in boxes */
@@ -93,6 +93,12 @@
 <body>
     <h2>Pick Your Donation Box</h2>
     <div class="grid" id="donationGrid"></div>
+    <p id="donationText">
+        Your donations will go towards my mission trip to the Dominican Republic. The Dominican Republic 
+        mission trip is one of Hartfield Academy's annual mission trips, known most commonly as the Senior 
+        Mission Trip. It's my last year at Hartfield before I graduate, and I've been
+    </p>
+
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
@@ -117,7 +123,7 @@
             for (let i = 1; i <= 60; i++) {
                 const box = document.createElement("div");
                 box.className = "box";
-                box.innerText = i;
+                box.innerText = '$$(i)';
 
                 // Check if this box is already taken
                 const docRef = doc(db, "donations", String(i));
