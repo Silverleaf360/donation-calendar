@@ -5,28 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Donation Grid</title>
     <style>
-        <script>
-        async function checkDonations() {
-        const sheetURL = "https://script.google.com/macros/s/AKfycbyYm_qciimISTb31ll2JN9QIzUX4l8IeRJBPHTsmLdZmb4WoOt2jWdmgRLCKoAf5AMK/exec"; // Replace with your actual URL
-    
-                try {
-                    let response = await fetch(sheetURL);
-                    let data = await response.json();
-                    let donatedAmounts = data.slice(1).map(row => row[1]); // Skip headers, get amounts
-        
-                    // Cross out donated boxes
-                    document.querySelectorAll(".box").forEach(box => {
-                        let amount = parseInt(box.innerText.replace("$", ""));
-                        if (donatedAmounts.includes(amount)) {
-                            box.style.textDecoration = "line-through";
-                            box.style.backgroundColor = "#d3d3d3"; // Gray out
-                        }
-                    });
-                } catch (error) {
-                    console.error("Error fetching donations:", error);
-                }
-            }
-
             // Check for updates every 10 seconds
             setInterval(checkDonations, 10000);
             checkDonations();
