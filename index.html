@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Donation Grid</title>
     <style>
-        /* General Styling */
+        /* Your existing CSS goes here */
         body {
             font-family: 'Arial', sans-serif;
             background-color: #b3daf9; /* Light background */
@@ -13,34 +13,15 @@
             padding: 0;
         }
 
-        h2 {
-            text-align: center;
-            font-size: 50px;
-            color: #333;
-            padding-top: 20px;
-        }
-
-        h3 {
-            text-align: center;
-            font-size: 25px;
-            color: #333;
-            padding-top: 75px;
-            padding-top: 10px;
-        }
-
-        /* Grid Container */
         .grid {
             display: grid;
             grid-template-columns: repeat(10, 1fr); /* 10 boxes per row */
-            max-width: 600px;
             gap: 10px;
             margin: 20px auto;
+            max-width: 600px;
             justify-content: center; /* Ensures content is centered */
-            align-items: center;
-            padding-top: 20px;
         }
 
-        /* Individual Box */
         .box {
             width: 60px;
             height: 60px;
@@ -50,76 +31,23 @@
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
-            background-color: #4CAF50; /* Green background */
+            background-color: #4CAF50;
             color: white;
-            border: 2px solid #7A9BAE; /* Grayish blue outline */
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-            transition: background-color 0.03s ease, transform 0.03s ease, box-shadow 0.03s ease;
+            border: 2px solid #7A9BAE;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
-        /* Box Hover Effect */
         .box:hover {
-            background-color: #147a19; /* Darker green on hover */
-            transform: scale(1.1); /* Slight zoom effect */
+            background-color: #147a19;
+            transform: scale(1.1);
         }
 
-        /* Box when clicked (taken) */
+        /* Box Crossed-out */
         .taken {
-            background-color: #d3d3d3; /* Gray background */
+            background-color: #d3d3d3;
             cursor: not-allowed;
-            text-decoration: line-through; /* Cross out text */
-            box-shadow: none; /* Remove shadow when taken */
+            text-decoration: line-through;
         }
-
-        /* Crossed-out animation */
-        @keyframes crossOut {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(0.95); opacity: 0.5; }
-        }
-
-        .crossed {
-            animation: crossOut 0.5s ease forwards; /* Animation for crossed out effect */
-        }
-
-        /* Box when successfully chosen (paid for) */
-        .chosen {
-            background-color: #ff5733; /* Red for taken */
-            color: white;
-        }
-
-        /* Fade-in Effect for Boxes */
-        .box {
-            opacity: 0;
-            animation: fadeIn 0.1s forwards;
-        }
-
-        /* Animation to fade in boxes */
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-        #donationText {
-    text-align: center;
-    font-size: 18px;
-    color: #333;  /* Dark gray text */
-    max-width: 900px;  /* Prevents the text from being too wide */
-    margin: 20px auto;  /* Centers the paragraph */
-    padding: 10px;
-    line-height: 1.5;  /* Better spacing between lines */
-    background-color: #f8f9fa; /* Light background */
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
-    white-space: pre-line;  /* Allows line breaks */
-
-
-    /* Initially hidden */
-    opacity: 0;  
-
-    /* Fade in with delay */
-    animation: fadeIn 1s ease-in-out forwards;
-    animation-delay: 5s; /* Delay text appearance by 2 seconds */
-        }
-
     </style>
 </head>
 <body>
@@ -127,90 +55,72 @@
     <h3>My Venmo: @will3stuart</h3>
     <div class="grid" id="donationGrid"></div>
     <p id="donationText">
-        Your donations will go towards my mission trip to the Dominican Republic. The Dominican Republic
-        mission trip is one of Hartfield Academy's annual mission trips, known most commonly as the Senior
-        Mission Trip. It's my last year at Hartfield before I graduate, and I've been looking forward to this
-        trip for a long time. However, it's not a cheap trip; I have to raise money if I want to go. That's
-        why I built this website as an easy and different way to donate money if you would like to help (also,
-        please forgive me for any bugs or mistakes. I've never made a website before). If you feel led to donate,
-        no matter how much, I genuinely appreciate it. This trip wouldn't be possible without you. I'll be
-        posting some pictures on my instagram (was_361), but I'm not sure how often I'll have the opportunity to
-        take pictures. Again, thank you if you choose to donate, and I understand if you don't. 
-
-        Info about the trip:
-        We're going to be leaving on March 5th, and we'll be gone for the first half of Spring Break. We're 
-        going to be hanging out with kids, evangelizing to houses, sharing our testimonies, and delivering 
-        packages of rice and beans. It provides a good opportunity for the senior class to get to know each 
-        other better, and it's incredibly rare for a student to go on the Dominican trip and come back unchanged.
-        While we're there, I ask that you pray for us to make a difference, whether that be to the people of the 
-        Dominican or to each other. Pray that we truly gain something from the experience, and don't just go on
-        with our lives as normal like we never even went at all. Thank you so much for your time, especially if 
-        you've read this far. I hope you have a fantastic day :)
+        Your donations will go towards my mission trip to the Dominican Republic...
     </p>
 
+    <!-- The script goes at the bottom of the body to ensure elements are loaded before it's executed -->
+    <script>
+        async function checkDonations() {
+            const sheetURL = "https://script.google.com/macros/s/AKfycbyYm_qciimISTb31ll2JN9QIzUX4l8IeRJBPHTsmLdZmb4WoOt2jWdmgRLCKoAf5AMK/exec"; // Replace with your actual URL
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+            try {
+                let response = await fetch(sheetURL);
+                let data = await response.json(); // Fetch the data from Google Apps Script
+                
+                // Assuming data[1:] skips header row and row[1] contains dollar amounts
+                let donatedAmounts = data.slice(1).map(row => row[1]); // Get amounts from column 2
 
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-        const firebaseConfig = {
-          apiKey: "AIzaSyDupIsmQag53bZzxKzjcVDgRRzFbdnL2fs",
-          authDomain: "donation-calendar-6dac3.firebaseapp.com",
-          projectId: "donation-calendar-6dac3",
-          storageBucket: "donation-calendar-6dac3.firebasestorage.app",
-          messagingSenderId: "342495556535",
-          appId: "1:342495556535:web:6dd427e731c5a6dcb0ee32",
-          measurementId: "G-8B8M0B07WL"
-        };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+                // Cross out donated boxes
+                document.querySelectorAll(".box").forEach(box => {
+                    let amount = parseInt(box.innerText.replace("$", ""));
+                    if (donatedAmounts.includes(amount)) {
+                        box.classList.add("taken"); // Mark as taken
+                    }
+                });
+            } catch (error) {
+                console.error("Error fetching donations:", error);
+            }
+        }
 
-        const grid = document.getElementById("donationGrid");
-
+        // This function will load the grid and set up each donation box
         async function loadGrid() {
+            const grid = document.getElementById("donationGrid");
+
             for (let i = 1; i <= 60; i++) {
                 const box = document.createElement("div");
-                box.className = "box";
+                box.classList.add("box");
                 box.innerText = `$${i}`;
 
+                // Check if this box is already taken (from Firestore or Google Sheet)
+                const sheetURL = "https://script.google.com/macros/s/AKfycbyYm_qciimISTb31ll2JN9QIzUX4l8IeRJBPHTsmLdZmb4WoOt2jWdmgRLCKoAf5AMK/exec"; // Replace with your actual URL
+                let response = await fetch(sheetURL);
+                let data = await response.json();
+                let donatedAmounts = data.slice(1).map(row => row[1]);
 
-                // Check if this box is already taken
-                const docRef = doc(db, "donations", String(i));
-                const docSnap = await getDoc(docRef);
-
-                if (docSnap.exists()) {
+                if (donatedAmounts.includes(i)) {
                     box.classList.add("taken"); // Mark as taken
                 }
 
                 // Clicking the box will open the Venmo link
-                box.onclick = async () => {
+                box.onclick = () => {
                     if (box.classList.contains("taken")) {
                         alert("This box is already taken!");
                         return;
                     }
-
-                    const confirmDonate = confirm(`Donate $${i}?`);
-                    if (confirmDonate) {
-                        // Venmo link (replace with your username)
-                        const venmoLink = `https://venmo.com/will3stuart?txn=pay&amount=${i}&note=Donation+Box+${i}`;
-                        window.open(venmoLink, "_blank");
-
-                        // After donation, confirm and mark box as paid
-                        const confirmPaid = confirm("Mark this box as paid?");
-                        if (confirmPaid) {
-                            await setDoc(docRef, { paid: true });
-                            box.classList.add("chosen");
-                            box.classList.add("crossed");  // Apply crossed-out effect
-                        }
-                    }
+                    const venmoLink = `https://venmo.com/will3stuart?txn=pay&amount=${i}&note=Donation+Box+${i}`;
+                    window.open(venmoLink, "_blank");
                 };
 
                 grid.appendChild(box);
             }
         }
 
-        loadGrid();
+        // Load grid once the page is ready
+        window.onload = loadGrid;
+
+        // Check for donations every 10 seconds
+        setInterval(checkDonations, 10000); // Refresh every 10 seconds
+        checkDonations(); // Initial check
     </script>
 </body>
 </html>
