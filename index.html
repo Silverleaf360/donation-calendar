@@ -98,28 +98,27 @@
             0% { opacity: 0; }
             100% { opacity: 1; }
         }
+
         #donationText {
-    text-align: center;
-    font-size: 18px;
-    color: #333;  /* Dark gray text */
-    max-width: 900px;  /* Prevents the text from being too wide */
-    margin: 20px auto;  /* Centers the paragraph */
-    padding: 10px;
-    line-height: 1.5;  /* Better spacing between lines */
-    background-color: #f8f9fa; /* Light background */
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
-    white-space: pre-line;  /* Allows line breaks */
+            text-align: center;
+            font-size: 18px;
+            color: #333;  /* Dark gray text */
+            max-width: 900px;  /* Prevents the text from being too wide */
+            margin: 20px auto;  /* Centers the paragraph */
+            padding: 10px;
+            line-height: 1.5;  /* Better spacing between lines */
+            background-color: #f8f9fa; /* Light background */
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+            white-space: pre-line;  /* Allows line breaks */
 
+            /* Initially hidden */
+            opacity: 0;  
 
-    /* Initially hidden */
-    opacity: 0;  
-
-    /* Fade in with delay */
-    animation: fadeIn 1s ease-in-out forwards;
-    animation-delay: 5s; /* Delay text appearance by 2 seconds */
+            /* Fade in with delay */
+            animation: fadeIn 1s ease-in-out forwards;
+            animation-delay: 5s; /* Delay text appearance by 2 seconds */
         }
-
     </style>
 </head>
 <body>
@@ -148,47 +147,39 @@
         you've read this far. I hope you have a fantastic day :)
     </p>
 
+    <script>
+        // Store the donation data globally to avoid fetching it repeatedly
+        let donatedAmounts = [];
 
-      <script>
-        async function checkDonations() {
+        async function fetchDonationData() {
             const sheetURL = "https://script.google.com/macros/s/AKfycbyYm_qciimISTb31ll2JN9QIzUX4l8IeRJBPHTsmLdZmb4WoOt2jWdmgRLCKoAf5AMK/exec"; // Replace with your actual URL
 
             try {
                 let response = await fetch(sheetURL);
-                let data = await response.json(); // Fetch the data from Google Apps Script
+                let data = await response.json();
                 
-                // Assuming data[1:] skips header row and row[1] contains dollar amounts
-                let donatedAmounts = data.slice(1).map(row => row[1]); // Get amounts from column 2
-
-                // Cross out donated boxes
-                document.querySelectorAll(".box").forEach(box => {
-                    let amount = parseInt(box.innerText.replace("$", ""));
-                    if (donatedAmounts.includes(amount)) {
-                        box.classList.add("taken"); // Mark as taken
-                    }
-                });
+                // Get all donation amounts from column 2 (skipping the header row)
+                donatedAmounts = data.slice(1).map(row => row[1]);
             } catch (error) {
                 console.error("Error fetching donations:", error);
             }
         }
 
-        // This function will load the grid and set up each donation box
         async function loadGrid() {
+            // Fetch the donation data once when the page loads
+            await fetchDonationData();
+
             const grid = document.getElementById("donationGrid");
 
+            // Create the 60 donation boxes
             for (let i = 1; i <= 60; i++) {
                 const box = document.createElement("div");
                 box.classList.add("box");
                 box.innerText = `$${i}`;
 
-                // Check if this box is already taken (from Firestore or Google Sheet)
-                const sheetURL = "https://script.google.com/macros/s/AKfycbyYm_qciimISTb31ll2JN9QIzUX4l8IeRJBPHTsmLdZmb4WoOt2jWdmgRLCKoAf5AMK/exec"; // Replace with your actual URL
-                let response = await fetch(sheetURL);
-                let data = await response.json();
-                let donatedAmounts = data.slice(1).map(row => row[1]);
-
+                // If this box is taken, mark it as such
                 if (donatedAmounts.includes(i)) {
-                    box.classList.add("taken"); // Mark as taken
+                    box.classList.add("taken");
                 }
 
                 // Clicking the box will open the Venmo link
@@ -208,9 +199,8 @@
         // Load grid once the page is ready
         window.onload = loadGrid;
 
-        // Check for donations every 10 seconds
-        setInterval(checkDonations, 10000); // Refresh every 10 seconds
-        checkDonations(); // Initial check
+        // Periodically refresh the donation status (not the entire grid)
+        setInterval(fetchDonationData, 10000); // Refresh donation data every 10 seconds
     </script>
 </body>
 </html>
