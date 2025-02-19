@@ -196,36 +196,5 @@
 
         loadGrid();
     </script>
-    <script>
-        async function checkDonations() {
-        const sheetURL = "https://script.google.com/macros/s/AKfycbyYm_qciimISTb31ll2JN9QIzUX4l8IeRJBPHTsmLdZmb4WoOt2jWdmgRLCKoAf5AMK/exec"; // Replace with your actual URL
-
-        try {
-            let response = await fetch(sheetURL);
-            let data = await response.json();  // Fetch the data from Google Apps Script
-        
-            // Assuming data[1:] skips header row and row[1] contains dollar amounts
-            let donatedAmounts = data.slice(1).map(row => row[1]); // Get amounts from column 2
-
-            // Log the donated amounts to make sure you're getting the right data
-            console.log(donatedAmounts);  // Check the dollar amounts fetched from the sheet
-
-            // Cross out donated boxes
-            document.querySelectorAll(".box").forEach(box => {
-                let amount = parseInt(box.innerText.replace("$", ""));
-                if (donatedAmounts.includes(amount)) {
-                    box.style.textDecoration = "line-through";  // Cross out
-                    box.style.backgroundColor = "#d3d3d3"; // Gray out
-                }
-            });
-        } catch (error) {
-            console.error("Error fetching donations:", error);
-        }
-    }
-
-    // Check for updates every 10 seconds
-    setInterval(checkDonations, 10000);  // Refresh every 10 seconds
-    checkDonations();  // Initial check
-    </script>
 </body>
 </html>
