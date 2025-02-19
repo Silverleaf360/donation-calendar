@@ -68,7 +68,7 @@
         }
 
         .crossed {
-            animation: crossOut 0.3s ease forwards; /* Animation for crossed out effect */
+            animation: crossOut 0.5s ease forwards; /* Animation for crossed out effect */
         }
 
         /* Box when successfully chosen (paid for) */
@@ -114,7 +114,7 @@
         const grid = document.getElementById("donationGrid");
 
         async function loadGrid() {
-            for (let i = 1; i <= 100; i++) {
+            for (let i = 1; i <= 60; i++) {
                 const box = document.createElement("div");
                 box.className = "box";
                 box.innerText = i;
